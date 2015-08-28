@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="carstoreApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Car Store Angular App</title>
+
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/carstore.css">
+
+    <script src="lib/angular.min.js" ></script>
+    <script src="lib/angular-route.min.js" ></script>
+    <script src="lib/angular-resource.min.js" ></script>
+    <script src="js/carstoreApp.js"></script>
+
+    <script src="http://candy.dev:8075/js/candy-store-lib.js"></script>
+    <script src="http://candy.dev:8075/js/candystoreApp.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <h1>Them - Cars Powered by Angular</h1>
+
+    <div ng-controller="MainCtrl">
+        <div ng-show="isLoggedIn()">Welcome {{user}}!</div>
+
+        <div ng-view></div>
+
+        <div ng-show="isCandyTime()" id="candy-application-root"></div>
+
+        <form style="display:none;" id="sendAssertionForm" action="http://candy.dev:8075/assertions" method="post">
+            <input type="text" name="content" value="{{assertionForCandy()}}"/></p>
+            <input type="text" name="redirectUrl" value="{{redirectUrl()}}" />
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+    <div id="messageBus"></div>
+
+</div>
+
+</body>
+</html>

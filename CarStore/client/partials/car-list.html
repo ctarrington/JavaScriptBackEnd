@@ -1,0 +1,22 @@
+<h2>Cars</h2>
+<div class="container-fluid">
+
+    <div class="row" ng-repeat="car in cars | filter:query | orderBy:orderProp">
+        <div class="col-xs-2">{{car.make}}</div>
+        <div class="col-xs-2">{{car.model}}</div>
+        <div class="col-xs-2"><a href="#/cars/{{car.id}}">Edit</a></div>
+        <div class="col-xs-2"><a ng-click="deleteCar(car)">Delete</a></div>
+    </div>
+
+    <h2>Add a Car</h2>
+    <ng-form name="newCarForm">
+        <input name="make" type="text" ng-model="newCar.make" placeholder="Enter the make"/>
+        <input name="model" type="text" ng-model="newCar.model" placeholder="Enter the model"/>
+        <button ng-click="saveCar()">Save</button>
+    </ng-form>
+
+    <div ng-hide="isCandyTime()">
+        <h2>Visit our partners</h2>
+        <a href='#/candy'>See some candy!</a>
+    </div>
+</div>
