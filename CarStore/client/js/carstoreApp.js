@@ -143,9 +143,16 @@ carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout',
         };
 
         $scope.login = function() {
-            $http.post('/login', {name: $scope.login.username, password: $scope.login.password}).
+            $http.post('/token', {name: $scope.login.username, password: $scope.login.password}).
                 success(function(data, status, headers, config) {
-                    console.log('created voucher token' +data.message);
+                    console.log('received token data' +data);
+
+                    if (data != null && data.token != null) {
+                      $http.defaults.headers.common['Authorization'] = 'Bearer '+data.token;
+                      $scope.user = data.username;
+
+                    }
+
                 }).
                 error(function(data, status, headers, config) {
                     $scope.status = 'ERROR';
