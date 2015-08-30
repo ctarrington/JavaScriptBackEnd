@@ -6,8 +6,8 @@
  - pass as Authorization: Bearer <token>  X
 
 # tighten client
- - store in browser
- - retrieve from browser on refresh
+ - store token in browser
+ - retrieve token from browser on refresh
  - check authorization on location change in angular
  - show login link if not authorized
 

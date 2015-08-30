@@ -12,6 +12,10 @@ carstoreApp.factory('CarStorage', ['$resource',
 
     }]);
 
+carstoreApp.factory('userData', function () {
+  return { name: 'Guest' };
+});
+
 carstoreApp.config(['$routeProvider',
     function($routeProvider) {
         $routeProvider.
@@ -38,8 +42,10 @@ carstoreApp.config(['$routeProvider',
 
 var carControllers = angular.module('carControllers', []);
 
-carControllers.controller('MainCtrl', ['$scope', '$http', '$location',
-    function ($scope, $http, $location) {
+carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData',
+    function ($scope, $http, $location, userData) {
+
+      $scope.userData = userData;
 
         var changeRoute = function(evt) {
             $location.search('candyRoute', evt.detail.newRoute);
@@ -79,7 +85,7 @@ carControllers.controller('MainCtrl', ['$scope', '$http', '$location',
         });
 
         $scope.isLoggedIn = function() {
-            return ( $scope.user != null );
+            return ( $scope.userData.name != null );
         };
 
     }]);
@@ -133,8 +139,10 @@ carControllers.controller('CarDetailCtrl', ['$scope', '$routeParams',
         $scope.carId = $routeParams.carId;
     }]);
 
-carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout',
-    function($scope, $http, $timeout) {
+carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout', 'userData',
+    function($scope, $http, $timeout, userData) {
+
+        $scope.userData = userData;
         $scope.status = '';
 
         $scope.login = {
@@ -149,7 +157,7 @@ carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout',
 
                     if (data != null && data.token != null) {
                       $http.defaults.headers.common['Authorization'] = 'Bearer '+data.token;
-                      $scope.user = data.username;
+                      $scope.userData.name = $scope.login.username;
 
                     }
 
