@@ -50,6 +50,12 @@ carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData
     function ($scope, $http, $location, userData) {
 
       $scope.userData = userData;
+      if (window.localStorage.getItem('userData.name')) {
+        $scope.userData.name = window.localStorage.getItem('userData.name');
+        $http.defaults.headers.common['Authorization'] = 'Bearer '+window.localStorage.getItem('token');
+      }
+
+
 
         var changeRoute = function(evt) {
             $location.search('candyRoute', evt.detail.newRoute);
@@ -171,6 +177,8 @@ carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout', '$locatio
                     if (data != null && data.token != null) {
                       $http.defaults.headers.common['Authorization'] = 'Bearer '+data.token;
                       $scope.userData.name = $scope.login.username;
+                      window.localStorage.setItem('userData.name', $scope.login.username);
+                      window.localStorage.setItem('token', data.token);
                       $location.path('/cars');
 
                     }

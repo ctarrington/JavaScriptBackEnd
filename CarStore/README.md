@@ -7,8 +7,8 @@
 
 # tighten client
  - show login link if not authorized X
- - store token and user in session storage
- - retrieve token from session storage on refresh
+ - store token and user in local storage  X
+ - retrieve token from local storage on refresh  X
 
 # tighten server
  - check authorization on server for api authorization
