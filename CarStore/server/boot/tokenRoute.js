@@ -1,17 +1,24 @@
-var jwt = require('jwt-simple');
-var moment = require('moment');
+(function(){
+  "use strict";
 
-var secretKey  = 'supersecretkey';
+  var jwt = require('jwt-simple');
+  var moment = require('moment');
 
-module.exports = function(app) {
+  var secretKey  = 'supersecretkey';
 
-  app.post('/token', function(req, res) {
+  module.exports = function(app) {
 
-    var payload = {sub: req.body.name, iss:'CarStore', iat: moment().valueOf(), exp: moment().add(1, 'd').valueOf() };
-    var token = jwt.encode(payload, secretKey);
-    console.log(payload);
+    app.post('/token', function(req, res) {
 
-    res.send( {token: token} );
-  });
+      var payload = {sub: req.body.name, iss:'CarStore', iat: moment().valueOf(), exp: moment().add(1, 'd').valueOf() };
+      var token = jwt.encode(payload, secretKey);
+      console.log(payload);
 
-};
+      res.send( {token: token} );
+    });
+
+  };
+
+})();
+
+
