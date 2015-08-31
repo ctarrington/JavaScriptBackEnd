@@ -13,7 +13,7 @@ carstoreApp.factory('CarStorage', ['$resource',
     }]);
 
 carstoreApp.factory('userData', function () {
-  return { name: 'Guest' };
+  return { name: '' };
 });
 
 carstoreApp.config(['$routeProvider',
@@ -21,19 +21,23 @@ carstoreApp.config(['$routeProvider',
         $routeProvider.
             when('/cars', {
                 templateUrl: 'partials/car-list.html',
-                controller: 'CarListCtrl'
+                controller: 'CarListCtrl',
+                requiresLogin: true
             }).
             when('/cars/:carId', {
                 templateUrl: 'partials/car-detail.html',
-                controller: 'CarDetailCtrl'
+                controller: 'CarDetailCtrl',
+                requiresLogin: true
             }).
             when('/candy', {
                 templateUrl: 'partials/candy-detail.html',
-                controller: 'CarListCtrl'
+                controller: 'CarListCtrl',
+                requiresLogin: true
             }).
             when('/login', {
                 templateUrl: 'partials/login.html',
-                controller: 'LoginCtrl'
+                controller: 'LoginCtrl',
+                requiresLogin: false
             }).
             otherwise({
                 redirectTo: '/login'
@@ -72,6 +76,15 @@ carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData
             return ($location.url().indexOf('candy') >= 0);
         };
 
+        $scope.$on('$routeChangeStart', function (event, next) {
+
+          if (next.requiresLogin && !$scope.isLoggedIn()) {
+            event.preventDefault();
+            $location.path('/login');
+          }
+
+        });
+
         $scope.$on('$locationChangeSuccess', function(evt, newUrl, oldUrl) {
 
             var event = new CustomEvent("csLocationChanged", {
@@ -85,7 +98,7 @@ carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData
         });
 
         $scope.isLoggedIn = function() {
-            return ( $scope.userData.name != null );
+            return ( $scope.userData.name != null && $scope.userData.name != '' );
         };
 
     }]);
@@ -117,7 +130,8 @@ carControllers.controller('CarListCtrl', ['$scope', '$resource', 'CarStorage',
         };
 
         $scope.deleteCar = function(car) {
-            CarStorage.delete({id:car.id}, function success(response) {
+
+          CarStorage.delete({id:car.id}, function success(response) {
                     console.log( "delete success response"+JSON.stringify(response) );
                     loadCars();
                 },
@@ -126,7 +140,7 @@ carControllers.controller('CarListCtrl', ['$scope', '$resource', 'CarStorage',
                 }
             );
 
-        }
+        };
 
         loadCars();
         $scope.orderProp = 'make';
@@ -139,8 +153,8 @@ carControllers.controller('CarDetailCtrl', ['$scope', '$routeParams',
         $scope.carId = $routeParams.carId;
     }]);
 
-carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout', 'userData',
-    function($scope, $http, $timeout, userData) {
+carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout', '$location', 'userData',
+    function($scope, $http, $timeout, $location, userData) {
 
         $scope.userData = userData;
         $scope.status = '';
@@ -153,11 +167,11 @@ carControllers.controller('LoginCtrl', ['$scope', '$http', '$timeout', 'userData
         $scope.login = function() {
             $http.post('/token', {name: $scope.login.username, password: $scope.login.password}).
                 success(function(data, status, headers, config) {
-                    console.log('received token data' +data);
 
                     if (data != null && data.token != null) {
                       $http.defaults.headers.common['Authorization'] = 'Bearer '+data.token;
                       $scope.userData.name = $scope.login.username;
+                      $location.path('/cars');
 
                     }
 
