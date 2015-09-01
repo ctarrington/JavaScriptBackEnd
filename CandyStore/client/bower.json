@@ -1,0 +1,34 @@
+{
+  "name": "candystore",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ctarrington/JavaScriptSamples/EmberInsideAngular",
+  "authors": [
+    "ctarrington <arrington.ct@gmail.com>"
+  ],
+  "description": "sample ember app",
+  "main": "candystoreApp.js",
+  "keywords": [
+    "ember",
+    "sample"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.3",
+    "bootstrap": "~3.0.3",
+    "handlebars": "~1.3.0",
+    "ember": "~1.10",
+    "ember-data": "~1.0",
+    "ember-localstorage-adapter": "~0.5.3"
+  },
+  "resolutions": {
+    "ember": "~1.10"
+  }
+}
