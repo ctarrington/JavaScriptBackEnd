@@ -7,7 +7,6 @@ gulp.task('javascript', function() {
                         'bower_components/handlebars/handlebars.js',
                         'bower_components/ember/ember-template-compiler.js',
                         'bower_components/ember/ember.debug.js',
-                        'bower_components/ember-data/ember-data.js',
                         'bower_components/ember-data/ember-data.js'
                     ])
         .pipe(concat('candy-store-lib.js'))

@@ -1,9 +1,10 @@
 # My Application
 
 # client
- - move js code into src and add to build
- - use normal link_to and change notification scheme
+ - change notification scheme so ember can drive angular
+ - use normal link_to
+ - verify candy store independently - maneagable not managed...
 
 # overall
  - split candy into api server and web server and maybe authorization server behind nginx or kong
- 
+

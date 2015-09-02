@@ -33,4 +33,6 @@ IntelliJ
 *.iml
 .editorconfig
 
+dist/
+
 
