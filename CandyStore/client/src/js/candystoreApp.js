@@ -72,7 +72,7 @@ function createApp() {
         init: function() {
 
         },
-        updateTitle: function() {
+        updateRouteInUrl: function() {
           var base = this.target.router.currentHandlerInfos[1].name+'/';
           var routeParams = this.target.router.currentHandlerInfos[1].params;
 
@@ -81,6 +81,16 @@ function createApp() {
             parameter = routeParams[Object.keys(routeParams)[0]];
           }
           window.document.title = base+parameter;
+          var currentLocation = window.location;
+          var currentUri = new URI(currentLocation);
+          currentUri.removeQuery('emberRoute').addQuery('emberRoute', base+parameter);
+
+          var hash = currentUri.hash();
+          if (hash.indexOf('?') !== -1) {
+            hash = hash.substr(0, hash.indexOf('?'));
+          }
+
+          window.location = currentUri.protocol()+'://'+currentUri.host()+'/'+hash+'?'+currentUri.query();
         }.observes('currentPath')
     });
 
