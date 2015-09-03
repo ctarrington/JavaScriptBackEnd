@@ -40,14 +40,14 @@ function createApp() {
 <div class="row">\
     <div class="col-xs-2">{{candy.name}}</div>\
     <div class="col-xs-2">{{candy.size}}</div>\
-    <div class="col-xs-2"><a href="#" {{action "details" candy}}>Details</a> </div>\
+    <div class="col-xs-2">{{#link-to "candy" candy}}Details{{/link-to}}</div>\
     <div class="col-xs-2"><button {{action "delete" candy }}>Delete</button></div>\
 </div>\
 {{/unless}}\
 {{/each}}\
 \
 <div class="row">\
-    <div class="col-xs-4"><a href="#" {{action "create" }}>Create Candy</a></div>\
+    <div class="col-xs-4">{{#link-to "create"}}Create Candy{{/link-to}}</div>\
 </div>\
 ';
 
@@ -55,7 +55,7 @@ function createApp() {
     var candyRaw = '\
 <div>{{name}}</div>\
 <div>{{size}}</div>\
-<a href="#" {{action "candyList"}}>List</a>\
+{{#link-to "candyList"}}List{{/link-to}}\
 ';
 
     var createRaw = '\
@@ -111,22 +111,17 @@ function createApp() {
             };
 
             document.getElementById("messageBus").addEventListener("csLocationChanged", transitionToNewRoute.bind(this), false);
-        }
-    });
+        },
+        updateTitle: function() {
+          var base = this.target.router.currentHandlerInfos[1].name+'/';
+          var routeParams = this.target.router.currentHandlerInfos[1].params;
 
-    App.ApplicationRoute = Ember.Route.extend({
-        actions: {
-            details: function(candy) {
-                sendRouteChangeRequest('candy/'+candy.id);
-            },
-            candyList: function() {
-                sendRouteChangeRequest('candyList');
-            },
-            create: function() {
-                sendRouteChangeRequest('create');
-            }
-
-        }
+          var parameter = '';
+          if (routeParams != null && Object.keys(routeParams) != null && Object.keys(routeParams).length > 0) {
+            parameter = routeParams[Object.keys(routeParams)[0]];
+          }
+          window.document.title = base+parameter;
+        }.observes('currentPath')
     });
 
     App.IndexRoute = Ember.Route.extend({
