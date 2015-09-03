@@ -27,11 +27,6 @@
 
         <div ng-show="isCandyTime()" id="candy-application-root"></div>
 
-        <form style="display:none;" id="sendAssertionForm" action="http://candy.dev:8075/assertions" method="post">
-            <input type="text" name="content" value="{{assertionForCandy()}}"/></p>
-            <input type="text" name="redirectUrl" value="{{redirectUrl()}}" />
-            <input type="submit" value="Submit" />
-        </form>
     </div>
 
     <div id="messageBus"></div>

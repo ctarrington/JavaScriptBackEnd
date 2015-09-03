@@ -1,17 +1,5 @@
 function createApp() {
 
-    function sendRouteChangeRequest(newRoute)
-    {
-        var event = new CustomEvent("csRouteChangeRequest", {
-                detail: { newRoute: newRoute },
-                bubbles: true,
-                cancelable: true
-            }
-        );
-
-        document.getElementById("messageBus").dispatchEvent(event);
-    }
-
     var App = Ember.Application.create({
         LOG_TRANSITIONS: true,
         LOG_TRANSITIONS_INTERNAL: true,
@@ -83,34 +71,6 @@ function createApp() {
     App.ApplicationController = Ember.Controller.extend({
         init: function() {
 
-            function transitionToNewRoute(evt) {
-
-                if (evt.detail.newUrl.indexOf('candy') == -1) { return; }
-
-                var candyRouteMatches = evt.detail.newUrl.match(/candyRoute=([a-zA-Z0-9%]*)/);
-
-                var route = 'candyList';
-                if (candyRouteMatches !== null)
-                {
-                    route = candyRouteMatches[1];
-                }
-
-                var seperatorIndex = route.indexOf("%2F");
-                if (seperatorIndex >= 0) {
-                    var candyId = route.substring(seperatorIndex+3);
-                    route = route.substring(0, seperatorIndex);
-
-                    var transitionCB = function(candy) {
-                        this.transitionToRoute('candy', candy);
-                    };
-
-                    this.store.find('candy', candyId).then(transitionCB.bind(this));
-                } else {
-                    this.transitionToRoute(route);
-                }
-            };
-
-            document.getElementById("messageBus").addEventListener("csLocationChanged", transitionToNewRoute.bind(this), false);
         },
         updateTitle: function() {
           var base = this.target.router.currentHandlerInfos[1].name+'/';
@@ -163,20 +123,26 @@ function createApp() {
 }
 
 
+// add and remove the ember app from the dom
 $(document).ready(function() {
-    function checkForEntryToCandyStore(evt) {
-        var oldUrl = evt.detail.oldUrl;
-        var newUrl = evt.detail.newUrl;
+  function checkForEntryToCandyStore(oldUrl, newUrl) {
+      if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
+          var App = createApp();
+          checkForEntryToCandyStore.lastApp = App;
+      } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
+          checkForEntryToCandyStore.lastApp.destroy();
+      }
+  }
 
-        if (oldUrl.indexOf('candy') == -1 && newUrl.indexOf('candy') >= 0) {
-            var App = createApp();
-            checkForEntryToCandyStore.lastApp = App;
-        } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
-            checkForEntryToCandyStore.lastApp.destroy();
-        }
-    }
+  $(window).bind('hashchange', function(evt) {
+    var oldUrl = evt.originalEvent.oldURL;
+    var newUrl = evt.originalEvent.newURL;
+    checkForEntryToCandyStore(oldUrl, newUrl);
+  });
 
-    document.getElementById("messageBus").addEventListener("csLocationChanged", checkForEntryToCandyStore, false);
+  var startUrl = window.location.origin+'/'+ window.location.hash;
+  checkForEntryToCandyStore('', startUrl);
+
 });
 
 

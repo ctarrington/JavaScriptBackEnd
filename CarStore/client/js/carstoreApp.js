@@ -49,34 +49,11 @@ var carControllers = angular.module('carControllers', []);
 carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData',
     function ($scope, $http, $location, userData) {
 
-      $scope.userData = userData;
-      if (window.localStorage.getItem('userData.name')) {
-        $scope.userData.name = window.localStorage.getItem('userData.name');
-        $http.defaults.headers.common['Authorization'] = 'Bearer '+window.localStorage.getItem('token');
-      }
-
-
-
-        var changeRoute = function(evt) {
-            $location.search('candyRoute', evt.detail.newRoute);
-            $scope.$apply();
-        };
-
-        document.getElementById("messageBus").addEventListener("csRouteChangeRequest", changeRoute, false);
-
-        $scope.candyStoreInitialized = false;
-        $scope.assertionForCandy = '';
-        $scope.redirectUrl = function() { return 'http://localhost:3000/#/cars'; };
-
-        $scope.myAssertionForCandy = null;
-        $scope.assertionForCandy = function(value) {
-            if (value) {
-                $scope.myAssertionForCandy = value;
-            }
-            else {
-                return $scope.myAssertionForCandy;
-            }
-        };
+        $scope.userData = userData;
+        if (window.localStorage.getItem('userData.name')) {
+          $scope.userData.name = window.localStorage.getItem('userData.name');
+          $http.defaults.headers.common['Authorization'] = 'Bearer '+window.localStorage.getItem('token');
+        }
 
         $scope.isCandyTime = function() {
             return ($location.url().indexOf('candy') >= 0);
@@ -89,18 +66,6 @@ carControllers.controller('MainCtrl', ['$scope', '$http', '$location', 'userData
             $location.path('/login');
           }
 
-        });
-
-        $scope.$on('$locationChangeSuccess', function(evt, newUrl, oldUrl) {
-
-            var event = new CustomEvent("csLocationChanged", {
-                    detail: { oldUrl: oldUrl, newUrl: newUrl },
-                    bubbles: true,
-                    cancelable: true
-                }
-            );
-
-            document.getElementById("messageBus").dispatchEvent(event);
         });
 
         $scope.isLoggedIn = function() {
