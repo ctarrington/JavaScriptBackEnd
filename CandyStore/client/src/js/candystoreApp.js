@@ -1,5 +1,7 @@
 function createApp() {
 
+    var initiatedTransition = false;
+
     var App = Ember.Application.create({
         LOG_TRANSITIONS: true,
         LOG_TRANSITIONS_INTERNAL: true,
@@ -70,27 +72,44 @@ function createApp() {
 
     App.ApplicationController = Ember.Controller.extend({
         init: function() {
+          function transitionToNewRoute(evt) {
 
+            if (initiatedTransition) { return; }
+
+            if (evt.detail.newUrl.indexOf('candy') == -1) {
+              return;
+            }
+
+            var currentUri = new URI(window.location);
+            currentUri = new URI(currentUri.fragment());
+            var newRoute = currentUri.query(true)['emberRoute'];
+            this.transitionTo(newRoute);
+          }
+
+          document.getElementById("messageBus").addEventListener("csLocationChanged", transitionToNewRoute.bind(this), false);
         },
         updateRouteInUrl: function() {
-          var base = this.target.router.currentHandlerInfos[1].name+'/';
+          var base = this.target.router.currentHandlerInfos[1].name;
           var routeParams = this.target.router.currentHandlerInfos[1].params;
+          var newRoute = base;
 
-          var parameter = '';
           if (routeParams != null && Object.keys(routeParams) != null && Object.keys(routeParams).length > 0) {
-            parameter = routeParams[Object.keys(routeParams)[0]];
+            newRoute = '/'+base+'/'+routeParams[Object.keys(routeParams)[0]];
           }
-          window.document.title = base+parameter;
-          var currentLocation = window.location;
-          var currentUri = new URI(currentLocation);
-          currentUri.removeQuery('emberRoute').addQuery('emberRoute', base+parameter);
+
+
+          var currentUri = new URI(window.location);
+          currentUri.removeQuery('emberRoute').addQuery('emberRoute', newRoute);
 
           var hash = currentUri.hash();
           if (hash.indexOf('?') !== -1) {
             hash = hash.substr(0, hash.indexOf('?'));
           }
 
+          initiatedTransition = true;
           window.location = currentUri.protocol()+'://'+currentUri.host()+'/'+hash+'?'+currentUri.query();
+          setTimeout(function() { initiatedTransition = false; }, 100);
+
         }.observes('currentPath')
     });
 
@@ -135,12 +154,22 @@ function createApp() {
 
 // add and remove the ember app from the dom
 $(document).ready(function() {
+
   function checkForEntryToCandyStore(oldUrl, newUrl) {
       if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
           var App = createApp();
           checkForEntryToCandyStore.lastApp = App;
       } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
           checkForEntryToCandyStore.lastApp.destroy();
+      } else {
+        var event = new CustomEvent("csLocationChanged", {
+            detail: { oldUrl: oldUrl, newUrl: newUrl },
+            bubbles: true,
+            cancelable: true
+          }
+        );
+
+        document.getElementById("messageBus").dispatchEvent(event);
       }
   }
 
