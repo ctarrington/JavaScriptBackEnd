@@ -72,8 +72,8 @@ function createApp() {
 
     App.ApplicationController = Ember.Controller.extend({
         init: function() {
-          function transitionToNewRoute(evt) {
-
+          function transitionToNewRoute(evt)
+          {
             if (initiatedTransition) { return; }
 
             if (evt.detail.newUrl.indexOf('candy') == -1) {
@@ -86,7 +86,16 @@ function createApp() {
             this.transitionTo(newRoute);
           }
 
+          function setInitialRouteFromUrl(evt)
+          {
+            var initialUri = new URI(evt.detail.newUrl);
+            initialUri = new URI(initialUri.fragment());
+            var initialRoute = initialUri.query(true)['emberRoute'];
+            this.transitionTo(initialRoute);
+          }
+
           document.getElementById("messageBus").addEventListener("csLocationChanged", transitionToNewRoute.bind(this), false);
+          document.getElementById("messageBus").addEventListener("csInitialLocation", setInitialRouteFromUrl.bind(this), false);
         },
         updateRouteInUrl: function() {
           var base = this.target.router.currentHandlerInfos[1].name;
@@ -111,6 +120,7 @@ function createApp() {
           setTimeout(function() { initiatedTransition = false; }, 100);
 
         }.observes('currentPath')
+
     });
 
     App.IndexRoute = Ember.Route.extend({
@@ -159,6 +169,18 @@ $(document).ready(function() {
       if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
           var App = createApp();
           checkForEntryToCandyStore.lastApp = App;
+
+          var event = new CustomEvent("csInitialLocation", {
+              detail: { newUrl: newUrl },
+              bubbles: true,
+              cancelable: true
+            }
+          );
+
+          setTimeout(function() {
+            document.getElementById("messageBus").dispatchEvent(event);
+          }, 1);
+
       } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
           checkForEntryToCandyStore.lastApp.destroy();
       } else {
@@ -171,6 +193,8 @@ $(document).ready(function() {
 
         document.getElementById("messageBus").dispatchEvent(event);
       }
+
+
   }
 
   $(window).bind('hashchange', function(evt) {
