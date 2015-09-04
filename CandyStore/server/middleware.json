@@ -13,7 +13,9 @@
     }
   },
   "session": {},
-  "auth": {},
+  "auth": {
+    "./middleware/checkjwt": {}
+  },
   "parse": {},
   "routes": {},
   "files": {

@@ -17,8 +17,8 @@ Experimenting with more backend scenarios - SSO, separate out API, CORS, LoopBac
  - test more - history seems limited?? Something to do with readding the ember app?
  
  - wrap file in immediate and share functions to jquery  X
- - get jwt from carstore
- - verify candy store independently - maneagable not managed...
+ - get jwt from carstore  O
+ - verify candy store independently - manageable not managed...
 
 ## server
  - add jwt check to candy server

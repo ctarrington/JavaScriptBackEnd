@@ -21,6 +21,11 @@ function createApp() {
     App.ApplicationAdapter = DS.RESTAdapter.extend({
         host: 'http://candy.dev:8075',
         namespace: 'api',
+        headers: Ember.computed(function() {
+          return {
+            "Authorization": 'Bearer '+window.localStorage.getItem('token')
+          };
+        }).volatile(),
         ajax: function(url, method, hash) {
             var theHash = hash || {};
             theHash.crossDomain = true;
@@ -184,8 +189,6 @@ $(document).ready(function() {
       } else {
         csScope.transitionToNewRoute(newUrl);
       }
-
-
   }
 
   $(window).bind('hashchange', function(evt) {
