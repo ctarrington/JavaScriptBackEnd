@@ -177,6 +177,7 @@ $(document).ready(function() {
 
   function checkForEntryToCandyStore(oldUrl, newUrl) {
       if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
+          // entering
           var App = createApp();
           checkForEntryToCandyStore.lastApp = App;
 
@@ -185,9 +186,11 @@ $(document).ready(function() {
           }, 1);
 
       } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
+          // leaving
           checkForEntryToCandyStore.lastApp.destroy();
-      } else {
-        csScope.transitionToNewRoute(newUrl);
+      } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') >= 0) {
+          // still here
+          csScope.transitionToNewRoute(newUrl);
       }
   }
 
