@@ -19,7 +19,8 @@ Experimenting with more backend scenarios - SSO, separate out API, CORS, LoopBac
  - wrap file in immediate and share functions to jquery  X
  - get jwt from local storage X
  
- - verify candy store independently - manageable not managed...  O
+ - verify candy store independently - manageable not managed...  X
+ - need login from candy store alone
 
 ## server
  - add jwt check to candy server  X

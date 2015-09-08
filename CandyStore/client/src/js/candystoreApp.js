@@ -3,18 +3,19 @@
 
   var csScope = {};
 
-function createApp() {
+function createApp(embedded, rootElementName) {
 
     var initiatedTransition = false;
 
     var App = Ember.Application.create({
         LOG_TRANSITIONS: false,
         LOG_TRANSITIONS_INTERNAL: false,
-        rootElement : "#candy-application-root"
+        rootElement : rootElementName
     });
 
+    var location = (embedded) ? 'none' : 'hash'
     App.Router.reopen({
-        location: 'none'
+        location: location
     });
 
 
@@ -80,7 +81,9 @@ function createApp() {
         this.resource('candy', { path: 'candy/:candy_id'	});
     });
 
-    App.ApplicationController = Ember.Controller.extend({
+    if (embedded)
+    {
+      App.ApplicationController = Ember.Controller.extend({
         init: function() {
           function transitionToNewRoute(newUrl)
           {
@@ -131,7 +134,8 @@ function createApp() {
 
         }.observes('currentPath')
 
-    });
+      });
+    }
 
     App.IndexRoute = Ember.Route.extend({
         beforeModel: function() {
@@ -175,33 +179,54 @@ function createApp() {
 // add and remove the ember app from the dom
 $(document).ready(function() {
 
-  function checkForEntryToCandyStore(oldUrl, newUrl) {
-      if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
+  var embeddedRootName = '#embedded-candy-application-root';
+  var regularRootName = '#candy-application-root';
+
+  var embedded = $(embeddedRootName).get(0);
+  var regular = $(regularRootName).get(0);
+
+  if (embedded || regular)
+  {
+    var rootElementName = (embedded) ? embeddedRootName : regularRootName;
+
+    if (!embedded)
+    {
+      createApp(false, regularRootName);
+    }
+    else
+    {
+      function checkForEntryToCandyStore(oldUrl, newUrl) {
+        if ( (oldUrl.indexOf('candy') == -1) && newUrl.indexOf('candy') >= 0) {
           // entering
-          var App = createApp();
+          var App = createApp(true, embeddedRootName);
           checkForEntryToCandyStore.lastApp = App;
 
           setTimeout(function() {
             csScope.setInitialRouteFromUrl(newUrl);
           }, 1);
 
-      } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
+        } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') == -1) {
           // leaving
           checkForEntryToCandyStore.lastApp.destroy();
-      } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') >= 0) {
+        } else if (oldUrl.indexOf('candy') >= 0 && newUrl.indexOf('candy') >= 0) {
           // still here
           csScope.transitionToNewRoute(newUrl);
+        }
       }
+
+      $(window).bind('hashchange', function(evt) {
+        var oldUrl = evt.originalEvent.oldURL;
+        var newUrl = evt.originalEvent.newURL;
+        checkForEntryToCandyStore(oldUrl, newUrl);
+      });
+
+      var startUrl = window.location.origin+'/'+ window.location.hash;
+      checkForEntryToCandyStore('', startUrl);
+    }
+
+
   }
 
-  $(window).bind('hashchange', function(evt) {
-    var oldUrl = evt.originalEvent.oldURL;
-    var newUrl = evt.originalEvent.newURL;
-    checkForEntryToCandyStore(oldUrl, newUrl);
-  });
-
-  var startUrl = window.location.origin+'/'+ window.location.hash;
-  checkForEntryToCandyStore('', startUrl);
 
 });
 
