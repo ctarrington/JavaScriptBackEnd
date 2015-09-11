@@ -13,7 +13,9 @@
         var raw = req.headers['authorization'];
         var payload = (raw) ? jwt.decode(raw.substr(7), secretKey) : null;  // raw = 'Bearer <token>'
 
-        if (!payload || payload.iss !== 'CarStore') {
+        console.log(payload);
+
+        if (!payload || (payload.iss !== 'CarStore' && payload.iss !== 'CandyStore') ) {
           res.status(403).end();
         }
       }

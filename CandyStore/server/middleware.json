@@ -16,7 +16,10 @@
   "auth": {
     "./middleware/checkjwt": {}
   },
-  "parse": {},
+  "parse": {
+    "body-parser#json": {},
+    "body-parser#urlencoded": {"params": { "extended": true }}
+  },
   "routes": {},
   "files": {
     "loopback#static": [

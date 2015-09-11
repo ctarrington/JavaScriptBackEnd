@@ -35,6 +35,18 @@ function createApp(embedded, rootElementName) {
         }
     });
 
+    var loginRaw = '\
+      <div class="row">\
+        <div class="col-xs-2">Username: </div>{{input type="text" id="name" value=user.name placeholder="Enter your username" }}\
+      </div>\
+      <div class="row">\
+        <div class="col-xs-2">Password: </div>{{input type="text" id="password" value=user.password placeholder="Enter your password" }}\
+      </div>\
+      <div class="row">\
+        <div class="col-xs-2"><button {{action "submit" user }}>Login</button></div>\
+      </div>\
+    ';
+
     var candyListRaw = '\
 {{#each candy in candyList}}\
 {{#unless candy.isDirty}}\
@@ -65,6 +77,7 @@ function createApp(embedded, rootElementName) {
 <button {{action "submit" this }} >Submit</button>\
 ';
 
+    Ember.TEMPLATES["login"] = Ember.Handlebars.compile(loginRaw);
     Ember.TEMPLATES["application"] = Ember.Handlebars.compile('<div class="container"><h2>US - Ember Candy Store</h2>{{outlet}}</div>');
     Ember.TEMPLATES["candyList"] = Ember.Handlebars.compile(candyListRaw);
     Ember.TEMPLATES["candy"] = Ember.Handlebars.compile(candyRaw);
@@ -76,9 +89,67 @@ function createApp(embedded, rootElementName) {
     });
 
     App.Router.map(function() {
-        this.resource('candyList');
+        this.resource('login', { path: 'candy/login' });
+        this.resource('candyList', { path: 'candy/list' });
         this.resource('create', { path: 'candy/create' });
         this.resource('candy', { path: 'candy/:candy_id'	});
+    });
+
+    App.IndexRoute = Ember.Route.extend({
+        beforeModel: function() {
+            this.transitionTo('candyList');
+        }
+    });
+
+    function onTokenSuccess(data)
+    {
+      window.localStorage.setItem('userData.name', this.user.name);
+      window.localStorage.setItem('token', data.token);
+      this.transitionTo('candyList');
+    }
+
+    App.LoginController = Ember.ObjectController.extend({
+        error:"",
+        user: {name: 'fred', password: 'dgd'},
+        actions: {
+            submit: function() {
+              $.ajax({
+                type: "POST",
+                url: "/token",
+                data: { name: this.user.name, password: this.user.password },
+                success: onTokenSuccess.bind(this)
+              });
+            }
+        }
+    });
+
+    App.CandyListRoute = Ember.Route.extend({
+        model: function() {
+            return {
+                candyList: this.store.find('candy')
+            };
+        },
+        actions: {
+            delete: function(candy) {
+                candy.destroyRecord();
+            }
+        }
+    });
+
+    App.CreateRoute = Ember.Route.extend({
+        model: function() {
+            return this.store.createRecord('candy');
+        }
+    });
+
+    App.CreateController = Ember.ObjectController.extend({
+        error: "",
+        actions: {
+            submit: function(candy) {
+                candy.save();
+                this.transitionToRoute('candyList');
+            }
+        }
     });
 
     if (embedded)
@@ -136,41 +207,6 @@ function createApp(embedded, rootElementName) {
 
       });
     }
-
-    App.IndexRoute = Ember.Route.extend({
-        beforeModel: function() {
-            this.transitionTo('candyList');
-        }
-    });
-
-    App.CandyListRoute = Ember.Route.extend({
-        model: function() {
-            return {
-                candyList: this.store.find('candy')
-            };
-        },
-        actions: {
-            delete: function(candy) {
-                candy.destroyRecord();
-            }
-        }
-    });
-
-    App.CreateRoute = Ember.Route.extend({
-        model: function() {
-            return this.store.createRecord('candy');
-        }
-    });
-
-    App.CreateController = Ember.ObjectController.extend({
-        error: "",
-        actions: {
-            submit: function(candy) {
-                candy.save();
-                this.transitionToRoute('candyList');
-            }
-        }
-    });
 
     return App;
 }

@@ -20,11 +20,14 @@ Experimenting with more backend scenarios - SSO, separate out API, CORS, LoopBac
  - get jwt from local storage X
  
  - verify candy store independently - manageable not managed...  X
- - need login from candy store alone
+ - need login from candy store alone  O
 
 ## server
  - add jwt check to candy server  X
 
 ## overall
  - split candy into api server and web server and maybe authorization server behind nginx or kong
+ - docker for each piece?
+ 
+ 
 
