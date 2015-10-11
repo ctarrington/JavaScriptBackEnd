@@ -17,6 +17,30 @@ app.use(express.static('client'));
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded({ extended: true }) );
 
+function reverse(word)
+{
+    var reversed = '';
+
+    var last = word.length-1;
+    for (var ctr = last; ctr >= 0; ctr--)
+    {
+        reversed += word.substring(ctr, ctr+1);
+    }
+
+    return reversed;
+}
+
+function compareLength(wm1, wm2) {
+    if (wm1.match.length > wm2.match.length) {
+        return -1;
+    }
+    if (wm1.match.length < wm2.match.length) {
+        return 1;
+    }
+
+    return 0;
+}
+
 var server = app.listen(3000, function () {
 
     app.post('/createLargeFile', function(req, res) {
@@ -52,8 +76,14 @@ var server = app.listen(3000, function () {
            return {match: word, length: word.length, upper: word.toUpperCase()};
         });
 
+        wrappedMatches = wrappedMatches.sort(compareLength)
+
         var longest = wrappedMatches.reduce(function findLongest(wm, currentLong) {
             return (wm.match.length > currentLong.match.length) ? wm : currentLong;
+        });
+
+        var palindromes = wrappedMatches.filter(function filterPalindromes(wm) {
+            return (wm.match === reverse(wm.match));
         });
 
         var response = {};
@@ -61,7 +91,9 @@ var server = app.listen(3000, function () {
         response.longest = longest;
         response.length = wrappedMatches.length;
         response.lost = 0;
+        response.wrappedPalindromes = palindromes;
         response.wrappedMatches = wrappedMatches;
+
 
         if (response.wrappedMatches.length > LIMIT) {
             response.lost = response.wrappedMatches.length - LIMIT;
