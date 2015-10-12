@@ -1,0 +1,34 @@
+{
+	"id": "d7cd04a6-9eb3-2431-1eb7-4697a75537f1",
+	"name": "NodePerformanceTests",
+	"description": "",
+	"order": [
+		"6dd7048f-2daa-1c4d-43a6-7d1dc312e027"
+	],
+	"folders": [],
+	"timestamp": 1444532906075,
+	"owner": 0,
+	"remoteLink": "",
+	"public": false,
+	"requests": [
+		{
+			"id": "6dd7048f-2daa-1c4d-43a6-7d1dc312e027",
+			"headers": "",
+			"url": "http://localhost:3000/findMatches?q=^[ab].*s$",
+			"preRequestScript": "",
+			"pathVariables": {},
+			"method": "GET",
+			"data": [],
+			"dataMode": "params",
+			"version": 2,
+			"tests": "",
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1444538530937,
+			"name": "Find Matches",
+			"description": "",
+			"collectionId": "d7cd04a6-9eb3-2431-1eb7-4697a75537f1",
+			"responses": []
+		}
+	]
+}
