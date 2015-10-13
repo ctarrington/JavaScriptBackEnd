@@ -69,7 +69,7 @@ function filterPalindromes(wm) {
     return (wm.word === reverse(wm.word));
 }
 
-function buildResponse(wordList, req) {
+function buildResponse(wordList, req, res) {
 
     var start = Date.now();
 
@@ -80,7 +80,6 @@ function buildResponse(wordList, req) {
     }
 
     var wrappedWords = wordList.map(wrapWord);
-
     var matches = wrappedWords.filter(matcher);
 
     var palindromes = matches.filter(filterPalindromes);
@@ -105,7 +104,7 @@ function buildResponse(wordList, req) {
 
     var elapsed = Date.now() - start;
     console.log('elapsed='+elapsed);
-    return response;
+    res.send(response);
 }
 
 var server = app.listen(3000, function () {
@@ -126,12 +125,12 @@ var server = app.listen(3000, function () {
 
                 wordList = data.split('\n');
 
-                res.send(buildResponse(wordList, req));
+                buildResponse(wordList, req, res);
             });
         }
         else
         {
-            res.send(buildResponse(wordList, req));
+            buildResponse(wordList, req, res);
         }
 
 

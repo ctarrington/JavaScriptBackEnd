@@ -54,4 +54,4 @@ function burst(size)
 
 }
 
-burst(10);
+setInterval(function() { burst(50); }, 3500);
