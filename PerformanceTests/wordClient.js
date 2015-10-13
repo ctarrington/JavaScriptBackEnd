@@ -6,14 +6,14 @@ var Promise = require("bluebird");
 
 
 
-function makeCall(id) {
+function makeCall(id, letter) {
 
     var start = Date.now();
     var stop = null;
 
     var promise = new Promise(function (resolve, reject) {
         request
-            .get('http://localhost:3000/findMatches?q=^back.*[s]$')
+            .get('http://localhost:3000/findMatches?q=^'+letter+'.*'+letter+'$')
             .set('Accept', 'application/json')
             .end(function(err, res){
 
@@ -31,6 +31,13 @@ function makeCall(id) {
     };
 }
 
+function pickSize()
+{
+    return 10*Math.random()+30;
+}
+
+
+var letters = ['a','b','c','d','e'];
 function burst(size)
 {
     var calls = [];
@@ -39,7 +46,10 @@ function burst(size)
 
     for (var ctr=0; ctr<size;ctr++)
     {
-        var call = makeCall(ctr);
+        var letterIndex = Math.floor(5*Math.random());
+        var letter = letters[letterIndex];
+        console.log('calling burst with '+letter);
+        var call = makeCall(ctr,letter);
         calls.push(call);
     }
 
@@ -54,4 +64,4 @@ function burst(size)
 
 }
 
-setInterval(function() { burst(50); }, 3500);
+setInterval(function() { burst(pickSize()); }, 3500);

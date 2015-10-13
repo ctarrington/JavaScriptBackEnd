@@ -136,6 +136,5 @@ var server = app.listen(3000, function () {
 
     });
 
-
     console.log('Performance Tests listening at http://%s:%s', server.address().address, server.address().port);
 });
