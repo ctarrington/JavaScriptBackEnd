@@ -1,0 +1,14 @@
+{
+  "name": "try-flow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-plugin-transform-flow-strip-types": "^6.5.0"
+  }
+}
