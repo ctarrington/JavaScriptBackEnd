@@ -1,3 +1,3 @@
 export function yo(name:string):string {
-  return 'Foo says Yo, '+name;
+  return 'Foo says Hey There, '+name;
 }

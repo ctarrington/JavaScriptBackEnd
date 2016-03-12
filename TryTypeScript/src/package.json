@@ -1,0 +1,17 @@
+{
+  "name": "try-type-script",
+  "version": "1.0.0",
+  "description": "nvm use npm install -g typescript npm install -g concurrently npm install -g nodemon npm install -g tslint npm install -g typings",
+  "main": "simple-polymorphism.js",
+  "bin": {
+    "try-type-script": "simple-polymorphism.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}

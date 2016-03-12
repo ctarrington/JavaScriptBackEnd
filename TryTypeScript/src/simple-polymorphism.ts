@@ -1,4 +1,5 @@
 import * as foo from './lib/foo';
+import * as express from 'express';
 
 class Person {
     private name: string;
@@ -16,10 +17,11 @@ class Person {
 
 class Dog {
 
-    constructor() {}
+    constructor() {
+    }
 
     greet():string {
-        return 'Woof Woof';
+        return 'Woof Woof Woof';
     }
 }
 
@@ -49,4 +51,13 @@ for (var ctr = 0; ctr < occupants.length; ctr++)
 	console.log(occupant.greet());
 }
 
-console.log(foo.yo('Fred'));
+console.log(foo.yo('FRED'));
+
+var app = express();
+
+app.get('/', function (req, res) {
+  res.send('Hi World, How are you?');
+})
+
+app.listen(3000);
+console.log('after');
