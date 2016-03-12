@@ -16,12 +16,15 @@ class Person {
 }
 
 class Dog {
-
-    constructor() {
+    private name: string;
+    
+    constructor(name:string) {
+        this.name = name;
     }
 
     greet():string {
-        return 'Woof Woof Woof';
+        var greeting = this.name+' says Woof Woof Woof';
+        return greeting;
     }
 }
 
@@ -35,7 +38,7 @@ class Cat {
 }
 
 var fred = new Person('Fred', 68);
-var max = new Dog();
+var max = new Dog('Max');
 var tips = new Cat();
 
 interface Greetable {
@@ -44,6 +47,7 @@ interface Greetable {
 
 var occupants: Array<Greetable> = [fred, max, tips];
 
+setTimeout(function() {console.log('After a while, '+max.greet()); }, 1000);
 
 for (var ctr = 0; ctr < occupants.length; ctr++)
 {
