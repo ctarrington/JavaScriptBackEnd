@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ps" do |ps|
+
+    ps.vm.box = "bento/centos-7.1"
+    ps.vm.host_name = "perconaserver"
+    ps.vm.network "private_network", ip: "192.168.170.10"
+
+    ps.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__auto: "true"
+
+
+    ps.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+      v.cpus = 2
+    end
+
+    ps.vm.provision "shell", inline: "cd /vagrant && ./install_percona.sh"
+    ps.vm.provision "shell", inline: "cd /vagrant && ./change_permissions.sh"
+    ps.vm.provision "shell", inline: "cd /vagrant && ./start_database.sh"
+    ps.vm.provision "shell", inline: "cd /vagrant && ./load_database.sh"
+
+  end
+end
