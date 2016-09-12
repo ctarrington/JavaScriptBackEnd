@@ -1,8 +1,8 @@
-var graphqlHTTP = require('express-graphql');
-var express = require('express');
+const graphqlHTTP = require('express-graphql');
+const express = require('express');
 
-var db = require('./db');
-var api = require('./api');
+const db = require('./db');
+const api = require('./api');
 
 
 express()

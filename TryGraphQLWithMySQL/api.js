@@ -1,16 +1,33 @@
-var graphql = require('graphql');
-var db = require('./db');
+const graphql = require('graphql');
+const db = require('./db');
 
-var userType = new graphql.GraphQLObjectType({
+const addressType = new graphql.GraphQLObjectType({
+  name: 'Address',
+  fields: {
+    id: { type: graphql.GraphQLID },
+    line1: { type: graphql.GraphQLString, description: 'first line as in 1 Main Street' },
+    line2: { type: graphql.GraphQLString },
+    state: { type: graphql.GraphQLString },
+    zipCode: {type: graphql.GraphQLInt}
+  }
+});
+
+const userType = new graphql.GraphQLObjectType({
   name: 'User',
   fields: {
     id: { type: graphql.GraphQLID },
     firstName: { type: graphql.GraphQLString },
-    lastName: { type: graphql.GraphQLString }
+    lastName: { type: graphql.GraphQLString },
+    addresses: {
+      type: new graphql.GraphQLList(addressType),
+      resolve(user) {
+        return user.getAddresses();
+      }
+    }
   }
 });
 
-var schema = new graphql.GraphQLSchema({
+const schema = new graphql.GraphQLSchema({
   query: new graphql.GraphQLObjectType({
     name: 'Query',
     fields: {
