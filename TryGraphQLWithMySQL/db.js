@@ -64,7 +64,7 @@ User.create({firstName: 'Alexander', lastName: 'Hamilton'});
 User.create({firstName: 'Alexander', lastName: 'Thegreat'});
 User.create({firstName: 'Thomas', lastName: 'Jefferson'}).then(user => {
     user.createAddress({line1: '1 Main Street',
-                        state: 'Smalltown',
+                        state: 'MD',
                         zipCode: 12345});
     });
 });
