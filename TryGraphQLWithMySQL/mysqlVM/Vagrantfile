@@ -3,7 +3,9 @@
 
 Vagrant.configure("2") do |config|
 
+  config.ssh.insert_key = false
   config.vm.define "ps" do |ps|
+
 
     ps.vm.box = "bento/centos-7.1"
     ps.vm.host_name = "perconaserver"
