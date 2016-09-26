@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize('mysql://fred:fred@192.168.170.10:3306/trygraphql');
+const sequelize = new Sequelize('postgres://apiuser:apiuser@localhost:15432/graphqldb');
 
 const User = sequelize.define('user', {
   firstName: {
