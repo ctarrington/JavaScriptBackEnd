@@ -8,7 +8,7 @@ APP_DB_PASS=apiuser
 APP_DB_NAME=graphqldb
 
 # Edit the following to change the version of PostgreSQL that is installed
-PG_VERSION=9.4
+PG_VERSION=9.5
 
 ###########################################################
 # Changes below this line are probably not necessary
@@ -91,6 +91,9 @@ CREATE DATABASE $APP_DB_NAME WITH OWNER=$APP_DB_USER
                                   LC_CTYPE='en_US.utf8'
                                   ENCODING='UTF8'
                                   TEMPLATE=template0;
+
+-- revoke everything from the public role
+REVOKE EXECUTE ON ALL FUNCTIONS IN SCHEMA my_schema FROM PUBLIC;
 EOF
 
 # Tag the provision time:
