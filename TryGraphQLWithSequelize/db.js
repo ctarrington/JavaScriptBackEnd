@@ -70,4 +70,4 @@ User.create({firstName: 'Thomas', lastName: 'Jefferson'}).then(user => {
 });
 
 
-module.exports = {User};
+module.exports = {User, Address};
