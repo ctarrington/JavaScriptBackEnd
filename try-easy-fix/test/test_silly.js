@@ -10,20 +10,22 @@ const silly = require('../lib/silly');
 function oldschool(obj, methodName) {
     const promiser = obj[methodName];
 
-    obj[methodName] = function(name, cb) {
-        const promise = promiser(name);
+    obj[methodName] = function() {
+
+        const cb = arguments[arguments.length-1];
+        const promise = promiser(...arguments);
         promise.then(function(data) {
             cb(null, data);
         });
-
     }
 }
 
 function newSchool(obj, methodName) {
     const oldStyle = obj[methodName];
     obj[methodName] = function(name) {
+        const oldArguments = arguments;
         const promise = new BluebirdPromise(function(resolve, reject) {
-            oldStyle(name, function(error, data) {
+            oldStyle(...oldArguments, function(error, data) {
                 if (error) {
                     reject(error);
                 } else {
@@ -38,10 +40,6 @@ function newSchool(obj, methodName) {
 
 
 oldschool(silly, 'greet_bluebird');
-silly.greet_bluebird('red', function(error, response) {
-            console.log('response = '+response);
-        });
-
 easyFix.wrapAsyncMethod(silly, 'greet_bluebird', {});
 newSchool(silly, 'greet_bluebird');
 
@@ -61,10 +59,12 @@ describe('silly greeting parser depending on an old school source of async greet
 
 describe('silly greeting parser depending on a bluebird promise using source of async greetings', function() {
     it('can parse a response', function(done) {
-        const promise = silly.greet_bluebird('fred');
+        const promise = silly.greet_bluebird('fred', 'Yo');
         promise.then(function(response) {
             const name = silly.parseName(response);
+            const greeting = silly.parseGreeting(response);
             assert(name === 'fred', 'name should match');
+            assert(greeting === 'Yo', 'greeting should match');
             done();
         });
     });
