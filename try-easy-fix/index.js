@@ -7,3 +7,8 @@ silly.greet_old_school_cb('fred', function(error, response) {
     console.log('response = '+response);
     console.log('name = '+silly.parseName(response));
 });
+
+silly.greet_bluebird('ted').then(function(response) {
+    console.log('response = '+response);
+    console.log('name = '+silly.parseName(response));
+});
