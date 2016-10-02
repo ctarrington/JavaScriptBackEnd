@@ -39,9 +39,9 @@ function newSchool(obj, methodName) {
 
 
 
-oldschool(silly, 'greet_bluebird');
-easyFix.wrapAsyncMethod(silly, 'greet_bluebird', {});
-newSchool(silly, 'greet_bluebird');
+//oldschool(silly, 'greet_bluebird');
+easyFix.wrapAsyncMethod(silly, 'greet_bluebird', {isPromise: true});
+//newSchool(silly, 'greet_bluebird');
 
 
 easyFix.wrapAsyncMethod(silly, 'greet_old_school_cb', {});
@@ -63,8 +63,8 @@ describe('silly greeting parser depending on a bluebird promise using source of 
         promise.then(function(response) {
             const name = silly.parseName(response);
             const greeting = silly.parseGreeting(response);
-            assert(name === 'fred', 'name should match');
-            assert(greeting === 'Yo', 'greeting should match');
+            assert.equal('fred', name, 'name should match');
+            assert.equal('Yo', greeting, 'greeting should match');
             done();
         });
     });
